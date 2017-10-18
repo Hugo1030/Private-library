@@ -1,36 +1,169 @@
-# Private-library
+# laoyang-serch-demo
 
-## 项目概述
+## 目录
 
-- 项目名称：记忆宫殿(Mind Palace)
-- 项目简介：私人图书搜索引擎，帮助大家提升检索效率和写作效率。基础功能是添加「微信公众号」和「上传图书」，然后通过关键字就可以把微信公众号的相关内容完全检索出来。
-    * 比如女孩子想要买裙子，可以添加时尚大V的微信公众号，检索出自己该类型的裙子类型。
-    * 想要了解高阶模型，可以将相关图书或者公众号放入图书馆，全文检索出该模型的全部内容。
-- 仓库地址：[项目 GitHub 仓库链接](https://github.com/Hugo1030/Private-library)
-- README ：
-	- 项目简介:
-      - 私人图书搜索引擎，帮助大家提升检索效率和写作效率。基础功能是添加「微信公众号」和「上传图书」，然后通过关键字就可以把微信公众号的相关内容完全检索出来。
-      - 进阶的功能，是想将自己的所有知识进行检索和管理。比如自己看过的网页，写过的文章，感兴趣的博客...一键添加了这个私人图书馆里。还可以通过爬虫，定期爬取感兴趣的杂志，新闻、网站...自动保存到私人图书馆。全部支持全文检索，找到自己需要的内容。彻底将自己的记忆外部化，高效的检索，方便创作。
-      - 最小MVP：完成「开智学堂」公众号历史文章爬取+数据库全文检索高亮+服务器部署前端页面制作。
-	- **开发计划**
-		- 预期成果：
-		    - 利用 SMART 原则描述预期开发结果。SMART 原则 —— 具体、可衡量、可达到、与课程相关、有时限。
-		    - 可以规划各个阶段成果。
-		- 项目功能：MVP核心功能是完成「开智学堂」公众号历史文章爬取+数据库全文检索高亮+服务器部署前端页面制作。
-		- 初步思路：第一步完成微信公众号爬虫制作，爬取「开智学堂」历史文章。
-    第二步，完成数据库内爬取内容的全文检索和高亮展示。第三步，制作Web页面，完成用户从注册到使用的网站框架。第四步，在云端部署及维护。
-		- 开发计划及分工：沥川(组长+后端)、阿虎(PM+后端)、刘纪元(后端)、容与(前端)
+- [介绍](#introduction)
+- [技术栈](#versions)
+- [安装](#installation)
 
-## 团队介绍
+## Introduction
+项目名称：记忆宫殿(Mind Palace)
 
-- 团队名称：黑骑士(Black Knight)
-- 团队成员：介绍每位团队成员和分工
-  - 成员 沥川（沥川-Hugo1030-北京) （组长+技术） 两月前辞职来京，全职投入python学习，喜爱读书，好写作，在开智入编程大坑。本项目发起人，希望和小伙伴在最后时光完成这件精彩的作品，不负青春！
-  - 成员 武虎（阿虎-wuhuhu800-北京） 原去哪儿网产品经理，现在辞职1个月，全力学习python中。过程中可以从产品的角度带着大家一起做好这个MVP。希望在这里和大家一起成长，相互启迪。
- - 成员 刘纪元（eleven－elevenera－北京） （后端）原去哪儿网PMO，现离职状态，学习python，希望成为创造者。项目过程中可以参与需求、技术开发、测试等环节，与团队协作一起努力完成好这个作品。
- - 成员 容与（容与-momo-o-美国）（前端）
+项目简介：私人图书搜索引擎，帮助大家提升检索效率和写作效率。基础功能是添加「微信公众号」和「阳志平博客」，然后通过关键字就可以把微信公众号的相关内容完全检索出来。
 
-## CHANGELOG
 
-- 2017-09-18 沥川 创建
-- 2017-09-23 添加项目、团队名称
+
+参考笑来搜原型 http://scout.lijinma.com/search 。
+
+如果想看看代码原理，请请查看三篇文章：
+
+[一：写一个搜索：使用 Laravel Scout，Elasticsearch，ik 分词](https://laravel-china.org/articles/4027)
+
+[二：写一个搜索：解决搜索结果高亮问题，使用 Laravel Scout，Elasticsearch，ik 分词](https://laravel-china.org/articles/4038)
+
+[三：写一个搜索：自定义词库；使用 Laravel Scout，Elasticsearch，ik 分词](https://laravel-china.org/articles/4039)
+
+
+# Versions
+> Laravel 5.4
+
+> ElasticSearch 5.1.1
+
+因为使用 `Laravel 5.4` 版本，所以需要一些基本的安装需求：
+
+* PHP >= 5.6.4
+* OpenSSL PHP Extension
+* PDO PHP Extension
+* Mbstring PHP Extension
+* Tokenizer PHP Extension
+* XML PHP Extension
+
+## Installation
+
+你可以使用 homestead 或者 valet 来跑这个项目，但是为了你更快就玩起来，我建议你这么做：
+
+如果是你 Mac 平台：
+
+```bash
+# 安装最新的 php 7.1 版本
+$ brew install php71
+
+# 安装 mysql 5.7
+$ brew install mysql
+```
+如果 brew 下载太慢了，推荐一个我使用的镜像，执行命令：
+
+```
+$ export HOMEBREW_BOTTLE_DOMAIN="http://homebrew-mirror-china.tycdn.net"
+```
+好了，以上依赖按照完成之后，就可以安装项目了。
+
+```bash
+$ git clone https://github.com/lijinma/laravel-scout-elastic-demo.git
+```
+### 安装依赖：
+```bash
+$ composer install
+```
+如果没有 `composer`，请下载 `composer`，参考
+> https://getcomposer.org/download/
+
+### 创建数据库：
+```
+$ mysql -uroot
+> create database laravel_scout_elastic_demo;
+```
+### 修改 .env：
+```
+$ cp .env.example .env
+```
+确认里面的数据库配置正确：
+```
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=laravel_scout_elastic_demo
+DB_USERNAME=root
+DB_PASSWORD=
+```
+### 安装 ElasticSearch:
+
+因为我们要使用 ik 插件，在安装这个插件的时候，如果自己想办法安装这个插件会浪费你很多精力。
+
+所以我们直接使用项目： https://github.com/medcl/elasticsearch-rtf
+
+当前的版本是 `Elasticsearch 5.1.1`，ik 插件也是直接自带了。
+
+安装好 ElasticSearch，跑起来服务，测试服务安装是否正确：
+
+```bash
+$ curl http://localhost:9200
+
+{
+  "name" : "Rkx3vzo",
+  "cluster_name" : "elasticsearch",
+  "cluster_uuid" : "Ww9KIfqSRA-9qnmj1TcnHQ",
+  "version" : {
+    "number" : "5.1.1",
+    "build_hash" : "5395e21",
+    "build_date" : "2016-12-06T12:36:15.409Z",
+    "build_snapshot" : false,
+    "lucene_version" : "6.3.0"
+  },
+  "tagline" : "You Know, for Search"
+}
+```
+如果正确的打印以上信息，证明 ElasticSearch 已经安装好了。
+
+接着你需要查看一下 ik 插件是否安装（请在你的 ElasticSearch 文件夹中执行）：
+
+```bash
+$ ./bin/elasticsearch-plugin list
+analysis-ik
+```
+如果出现 `analysis-ik`，证明 ik 已经安装。
+
+### 开启 php 自带 Web sever
+请确保你的 8000 端口没有被占用。
+```
+$ php artisan serve
+```
+从浏览器打开 [http://localhost:8000](http://localhost:8000) ，确认是否正常显示：
+
+![demo1](https://raw.githubusercontent.com/lijinma/MyBox/master/demo1.png)
+
+### 初始化和 ElasticSearch 相关的配置，创建 index
+
+```bash
+$ php artisan es:init
+```
+
+### 初始化数据库表格
+
+```bash
+$ php artisan migrate
+```
+
+### 爬取公众号数据并导入。
+
+```bash
+$ php artisan post:import
+```
+出现以下内容，说明正确导入了：
+
+```
+...
+create one post!
+create one post!
+create one post!
+create one post!
+...
+```
+### 完成
+从浏览器打开 [http://localhost:8000](http://localhost:8000)，搜索一个数据，比如`成长`
+
+![demo2](https://raw.githubusercontent.com/lijinma/MyBox/master/demo2.png)
+
+## License
+
+The MIT License (MIT).
