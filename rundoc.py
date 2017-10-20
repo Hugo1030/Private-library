@@ -26,7 +26,7 @@ def ngram_lm(f, ngram=2, N=100):
     dct = defaultdict(Counter)
 
     # 对words的左侧进行填充（padding）
-    start_token = "<s>"
+    start_token = " "
     # 逐行读取文件，防止一次读取造成内存不足
     for line in open(f):
         line_no += 1
@@ -68,4 +68,4 @@ def ngram_lm(f, ngram=2, N=100):
     sentence = "".join(l)
     return sentence
 
-print(ngram_lm(f="yzp_blog.csv", ngram=4, N=200))
+print(ngram_lm(f="yzp_blog.csv", ngram=6, N=100))
