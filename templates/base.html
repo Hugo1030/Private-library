@@ -1,0 +1,58 @@
+{% extends "bootstrap/base.html"  %}
+
+<!--主要就是继承该模板。-->
+{% block head %}
+{{ super() }}
+<!--.用super()获取它的基模板(即bootstrap/base.html)里原本的内容。-->
+<link rel="shortcut icon" href="{{ url_for('static',filename = 'favicon.png') }}"  type='image/x-icon'/>
+
+<link rel="icon" href="{{ url_for('static',filename = 'favicon.png')  }}" type="image/x-icon"/>
+{% endblock %}
+
+
+
+{% block title %}Flask{% endblock %}
+
+{% block navbar %}
+<div class="navbar navbar-inverse" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">首页</a>
+        </div>
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li><a href="/">老阳搜</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+<!--仅调用 flash() 函数并不能把消息显示出来，程序使用的模板要渲染这些消息。最好在 基模板中渲染 Flash 消息，因为这样所有页面都能使用这些消息。Flask 把 get_flashed_ messages() 函数开放给模板，用来获取并渲染消息-->
+<!--在模板中使用循环是因为在之前的请求循环中每次调用 flash() 函数时都会生成一个消息， 所以可能有多个消息在排队等待显示-->
+<!--get_flashed_messages() 函数获取的消息在下次调 用时不会再次返回，因此 Flash 消息只显示一次，然后就消失了。-->
+{% block content %}
+<div class="container">
+
+{%for message in get_flashed_messages() %}
+  <div class="alert alert-warning">
+  <button type="button" class="close" data-dismiss="alert">&times;</button>
+  {{ message }}
+  </div>
+{% endfor %}
+  {% block page_content %}{% endblock %}
+</div>
+
+{% block scripts %}
+{{  super() }}
+{{ moment.include_moment() }}
+{% endblock %}
+
+{% endblock %}
