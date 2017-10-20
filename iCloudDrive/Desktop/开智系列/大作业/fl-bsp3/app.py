@@ -1,4 +1,4 @@
-from flask import Flask,render_template,session, redirect, url_for,flash
+from flask import Flask,render_template,session, redirect, url_for,flash,make_response,request
 from flask_bootstrap import Bootstrap
 from flask_script import Manager
 from flask_moment import Moment
@@ -12,6 +12,7 @@ from flask_wtf import Form
 #import FlaskForm
 from wtforms import StringField, SubmitField
 from wtforms.validators import Required
+import rundoc #导入自动生成的文章程序
 
 class NameForm(Form):
     name = StringField('What is your name?', validators=[Required()])
@@ -74,9 +75,17 @@ class User(db.Model):
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
 #****************创建数据库表用到*******************************************
 
-@app.route('/',methods=['GET', 'POST'])
+@app.route('/',methods=['GET'])
 def index():
     return render_template('index.html')
+
+@app.route('/',methods=['POST'])
+def indexPost():
+    get_update = None
+    if request.form['action'] == u'老阳说':
+        article = rundoc.ngram_lm(f="yzp_blog.csv", ngram=4, N=200)
+
+    return render_template('index.html',article = article)
 
 @app.errorhandler(404)
 def page_not_found(e):
