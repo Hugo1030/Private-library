@@ -5,15 +5,13 @@ from flask_moment import Moment
 from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy #导入flask_sqlalchemy数据库
 import os
+import rundoc #导入自动生成的文章程序
 from flask_script import Shell#在运行shell的时候自动导入相关数控库实例配置
 #*********以下用于表单**********************************************
-#from flask_wtf import Form
 from flask_wtf import Form
 #import FlaskForm
 from wtforms import StringField, SubmitField
 from wtforms.validators import Required
-import rundoc #导入自动生成的文章程序
-
 class NameForm(Form):
     name = StringField('What is your name?', validators=[Required()])
     submit = SubmitField('Submit')
@@ -110,6 +108,10 @@ def listwechat():
 @app.route('/listbook')
 def listbook():
     return render_template('listbook.html')
+
+@app.route('/base')
+def test():
+    return render_template('base.html')
 
 if __name__ == "__main__":
     #manager.run() #manager.run()代替了app.run()，启动后就能解析命令行啦
