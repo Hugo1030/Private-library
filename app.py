@@ -83,7 +83,7 @@ def index():
 def indexPost():
     get_update = None
     if request.form['action'] == u'老阳说':
-        article = rundoc.ngram_lm(f="yzp_blog.csv", ngram=4, N=200)
+        article = rundoc.ngram_lm(f="yzp_blog.csv", ngram=6, N=200)
 
     return render_template('index.html',article = article)
 

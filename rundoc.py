@@ -15,10 +15,10 @@ def generate(lm):
             return word
 
 # f为所读取的文件；ngram 为gram个数；N为生成句子的词数
-def ngram_lm(f, ngram=2, N=100):
+def ngram_lm(f, ngram=4, N=30):
     # 设置行的计数，在超过一定限值之后停止文件读取
     line_no = 0
-    max_line = 5000
+    max_line = 8000
 
     # dct用于保存语ngram语言模型的概率
     # P(w_i|w_1, w_2, ... w_(i-1)) = P(w_i) * P(w_i|w_1, w_2, ... w_(ngram-1))
@@ -68,4 +68,4 @@ def ngram_lm(f, ngram=2, N=100):
     sentence = "".join(l)
     return sentence
 
-print(ngram_lm(f="yzp_blog.csv", ngram=6, N=100))
+print(ngram_lm(f="yzp_blog.csv", ngram=2, N=40))
