@@ -15,7 +15,6 @@
     <!-- Custom styles for this template -->
     <link href="static/css/cover.css" rel="stylesheet">
   </head>
-
   <body class="transbox" background="{{ url_for('static',filename='images/book4.jpg') }}" >
 
     <div class="site-wrapper">
@@ -47,14 +46,17 @@
 
 
                   <form action="/" method="post" >
-                  <input name="action" type="submit" value="老阳说" class="btn btn-lg btn-primary btn-block" >
+                  <input name="action" type="submit" value="AI写歌" class="btn btn-lg btn-primary btn-block" >
                 </form>
                   </span>
 
               </div>
             </p>
 
-             <p style="color:white" >{{ article }}</p>
+             <p style="color:white" >
+             {% for line in article %}
+             {{ line }}<br>
+             {% endfor %}</p>
 
           </div>
 

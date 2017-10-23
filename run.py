@@ -48,8 +48,3 @@ def generate_sentence(lm, ngram):
         if len(lastwords) > ngram:
             lastwords.pop(0)
     return para
-
-trigram = generate_lm('linxi.txt',2)
-
-for i in range(10):
-    print(generate_sentence(trigram, 2) + "\n")

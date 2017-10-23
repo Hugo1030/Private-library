@@ -13,6 +13,7 @@ from flask_wtf import Form
 from wtforms import StringField, SubmitField
 from wtforms.validators import Required
 import rundoc #导入自动生成的文章程序
+import run
 
 class NameForm(Form):
     name = StringField('What is your name?', validators=[Required()])
@@ -82,9 +83,12 @@ def index():
 @app.route('/',methods=['POST'])
 def indexPost():
     get_update = None
-    if request.form['action'] == u'老阳说':
-        article = rundoc.ngram_lm(f="linxi.txt", ngram=3, N=100)
-
+    if request.form['action'] == u'AI写歌':
+        trigram = run.generate_lm('linxi.txt',2)
+        article = []
+        for i in range(10):
+            sentence = run.generate_sentence(trigram, 2)
+            article.append(sentence)
     return render_template('index.html',article = article)
 
 @app.errorhandler(404)
