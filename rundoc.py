@@ -67,5 +67,3 @@ def ngram_lm(f, ngram=4, N=30):
 
     sentence = "".join(l)
     return sentence
-
-print(ngram_lm(f="yzp_blog.csv", ngram=2, N=40))
