@@ -18,14 +18,14 @@ def generate(lm):
 def ngram_lm(f, ngram=4, N=30):
     # 设置行的计数，在超过一定限值之后停止文件读取
     line_no = 0
-    max_line = 8000
+    max_line = 5000
 
     # dct用于保存语ngram语言模型的概率
     # P(w_i|w_1, w_2, ... w_(i-1)) = P(w_i) * P(w_i|w_1, w_2, ... w_(ngram-1))
     # 键为context，即w_1, w_2, ... w_(ngram-1)组成的tuple；值为在context的条件下w_i的概率分布
     dct = defaultdict(Counter)
 
-    # 对words的左侧进行填充（padding）
+    # 对words的左侧进行填充（padding)
     start_token = " "
     # 逐行读取文件，防止一次读取造成内存不足
     for line in open(f):
@@ -67,4 +67,3 @@ def ngram_lm(f, ngram=4, N=30):
 
     sentence = "".join(l)
     return sentence
-print(ngram_lm('linxi.txt',2,200))
