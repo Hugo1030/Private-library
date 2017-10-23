@@ -84,12 +84,9 @@ def index():
 def indexPost():
     get_update = None
     if request.form['action'] == u'AI写歌':
-        trigram = run.generate_lm('linxi.txt',2)
-        article = []
-        for i in range(10):
-            sentence = run.generate_sentence(trigram, 2)
-            article.append(sentence)
-    return render_template('index.html',article = article)
+        para = rundoc.ngram_lm('test2.txt',5,80)
+        lines = para.split(",")
+    return render_template('index.html',lines = lines)
 
 @app.errorhandler(404)
 def page_not_found(e):
