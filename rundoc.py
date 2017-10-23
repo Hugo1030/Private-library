@@ -67,3 +67,4 @@ def ngram_lm(f, ngram=4, N=30):
 
     sentence = "".join(l)
     return sentence
+print(ngram_lm('linxi.txt',2,200))
