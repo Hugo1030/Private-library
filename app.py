@@ -7,19 +7,22 @@ from flask_sqlalchemy import SQLAlchemy #导入flask_sqlalchemy数据库
 import os
 from flask_script import Shell#在运行shell的时候自动导入相关数控库实例配置
 #*********以下用于表单**********************************************
-#from flask_wtf import Form
 from flask_wtf import Form
-#import FlaskForm
 from wtforms import StringField, SubmitField
 from wtforms.validators import Required
 import rundoc #导入自动生成的文章程序
 import run
 
-class NameForm(Form):
-    name = StringField('What is your name?', validators=[Required()])
-    submit = SubmitField('Submit')
-#******以上用于表单模块*************************************************
+import flask_whooshalchemy
+from whoosh.fields import *
+from whoosh.qparser import QueryParser
+from jieba.analyse.analyzer import ChineseAnalyzer
+import datetime
 
+import tempfile
+import shutil
+import flask_whooshalchemyplus #as waa#about  flask_whooshalchemyplus
+from flask_whooshalchemyplus import index_all
 
 app = Flask(__name__)
 manager = Manager(app)
@@ -27,57 +30,38 @@ bootstrap = Bootstrap(app)
 #初始化对Flask-Bootstrap 输出的 Bootstrap 类初始化，初始化类的目的就是为了给类分配内存空间
 moment = Moment(app)
 
-app.config['SECRET_KEY'] = 'hard to guess string'
-#为了实现 CSRF 保护，Flask-WTF 需要程序设置一个密钥。Flask-WTF 使用这个密钥生成加密令牌
-
-#************SQLAlchemy 数据库方面配置***********************************
-basedir = os.path.abspath(os.path.dirname(__file__))
-app.config['SQLALCHEMY_DATABASE_URI'] ='sqlite:///' + os.path.join(basedir, 'data.sqlite')
+app.config['SQLALCHEMY_DATABASE_URI']='mysql+pymysql://Woody:123456@localhost/test1'
 #程序使用的数据库 URL 必须保存到 Flask 配置对象的 SQLALCHEMY_DATABASE_URI 键中
 app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True
-# SQLALCHEMY_COMMIT_ON_TEARDOWN 键，将其设为 True 时，每次请求结束后都会自动提交数据库中的变动
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-#解释https://stackoverflow.com/questions/33738467/how-do-i-know-if-i-can-disable-sqlalchemy-track-modifications
+
+#app.config['WHOOSH_DISABLED'] = True #dabout  flask_whooshalchemyplus,disable whoosh indexing .
+app.config['WHOOSH_BASE'] = 'whoosh_index'#一定要找到新索引的位置
+
 db = SQLAlchemy(app)
-#db 对象是 SQLAlchemy 类的实例，表示程序使用的数据库，同时还获得了 Flask-SQLAlchemy提供的所有功能。
-#************SQLAlchemy 数据库方面配置*************************************
+index_all(app)
 
+class BlogingPost(db.Model):
+    __tablename__ = 'blogingpost2'
+    __searchable__ = ['title', 'content']  # these fields will be indexed by whoosh
+    #__analyzer__ = SimpleAnalyzer()        # configure analyzer; defaults to
+    __analyzer__ = ChineseAnalyzer()                                  # StemmingAnalyzer if not specified
 
-def make_shell_context():
-    return dict(app=app, db=db, User=User, Role=Role)
-manager.add_command("shell", Shell(make_context=make_shell_context))
-#make_shell_context() 函数注册了程序、数据库实例以及模型，因此这些对象能直接导入 shell
-
-
-#****************创建数据库表用到*******************************************
-
-class Role(db.Model):
-
-     __tablename__ = 'roles'#__tablename__定义数控库表名
-     id = db.Column(db.Integer, primary_key=True)
-     name = db.Column(db.String(64), unique=True)
-     def __repr__(self):
-#__repr()__ 方法，返回一个具有可读性的字符 串表示模型，可在调试和测试时使用
-         return '<Role %r>' % self.name
-     users = db.relationship('User', backref='role',lazy='dynamic')
-#db.relationship() 的第一个参数表 明这个关系的另一端是哪个模型。如果模型类尚未定义，可使用字符串形式指定。
-#db.relationship() 中的 backref 参数向 User 模型中添加一个 role 属性，从而定义反向关系。--不理解
-#这一属性可替代 role_id 访问 Role 模型，此时获取的是模型对象，而不是外键的值--不理解
-#这个例子中的 user_role.users 查询有个小问题。执行 user_role.users 表达式时，隐含的 查询会调用 all() 返回一个用户列表。query 对象是隐藏的，因此无法指定更精确的查询 过滤器。
-#加入了 lazy = 'dynamic' 参数，从而禁止自动执行查询。
-
-class User(db.Model):
-
-    __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(64), unique=True, index=True)
-    def __repr__(self):
-        return '<User %r>' % self.username
-    role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
-#****************创建数据库表用到*******************************************
+    title = db.Column(db.String(100))  # Indexed fields are either String,
+    content = db.Column(db.String(15000))   # Unicode, or Text
+    datime = db.Column(db.String(20))
+    url = db.Column(db.String(100))
+
+#flask_whooshalchemyplus.init_app(app)    # initialize
+flask_whooshalchemyplus.init_app(app)
+flask_whooshalchemyplus.whoosh_index(app,BlogingPost)#about  flask_whooshalchemyplus
+
+
+
 
 @app.route('/',methods=['GET'])
 def index():
+    posts = BlogingPost.query.all()
     return render_template('index.html')
 
 @app.route('/',methods=['POST'])
@@ -98,7 +82,9 @@ def headpage():
 
 @app.route('/introduce')
 def introduce():
-    return render_template('introduce.html')
+
+    posts = BlogingPost.query.whoosh_search(request.args.get('query')).all()
+    return render_template('introduce.html',posts=posts)
 
 @app.route('/listblog')
 def listblog():
@@ -112,6 +98,31 @@ def listwechat():
 def listbook():
     return render_template('listbook.html')
 
+@app.route('/search')
+def search():
+    posts =BlogingPost.query.whoosh_search(request.args.get('query')).all()
+
+    return render_template('searchhello.html',posts=posts)
+
+@app.route('/testa',methods=['GET','POST'])
+def testa():
+    posts = BlogingPost.query.filter_by(id = request.args.get('id')).all()
+    ##获取从列表页（searchhello）传过来的id参数，通过id检索到对应的数据库对应的某一行。
+    poststext =BlogingPost.query.whoosh_search(request.args.get('query')).all()
+    return render_template('testa.html',posts=posts,poststext=poststext)#,poststext=poststext)
+
+
+@app.route('/add',methods=['GET','POST'])
+def add():
+    if request.method =="POST":
+        post = BlogingPost(title=request.form['title'],content=request.form['content'])
+        db.session.add(post)
+        db.session.commit()
+        return redirect(url_for('index'))
+
+    return render_template('add.html')
+
+app.config['WHOOSH_DISABLED'] = True
 if __name__ == "__main__":
     #manager.run() #manager.run()代替了app.run()，启动后就能解析命令行啦，可以继续
     app.run(debug = True)
